@@ -7,6 +7,7 @@ import { Stack, Scene, Router } from 'react-native-router-flux';
 
 import { connect, Provider } from 'react-redux';
 import configureStore from './configureStore';
+import requireAuth from './utils/requireAuth.container';
 const store = configureStore();
 const RouterWithRedux = connect()(Router);
 
@@ -19,16 +20,7 @@ const Routes = () => (
                     <Scene key="signup" hideNavBar component={Signup} title="Register" />
                 </Stack>
                 <Stack key="main">
-                    <Scene
-                        hideNavBar
-                        key="home"
-                        component={Main}
-                        title="Home"
-                        leftTitle="Sign out"
-                        onLeft={() => { firebase.auth().signOut(); Actions.auth(); }}
-                        onRight={() => console.log('Right')}
-                        rightTitle="Add"
-                    />
+                    <Scene hideNavBar key="home" component={requireAuth(Main)} title="Home" />
                 </Stack>
             </Stack>
         </RouterWithRedux>

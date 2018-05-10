@@ -1,3 +1,6 @@
+import firebase from 'firebase';
+import { Actions } from 'react-native-router-flux';
+
 /**
  |--------------------------------------------------
  | Types
@@ -23,9 +26,7 @@ export const signInUser = ({ email, password }) => (dispatch) => {
         .then((user) => {
             dispatch({ type: SIGN_IN_SUCCESS, payload: user });
 
-            dispatch(reset('signin'));
-
-            Actions.post();
+            Actions.home();
         })
         .catch((error) => { dispatch({ type: SIGN_IN_FAILURE, payload: authFailMessage(error.code) }); });
 };
@@ -40,9 +41,7 @@ export const signUpUser = ({ email, password, firstname, lastname }) => (dispatc
                 .then(() => {
                     dispatch({ type: SIGN_UP_SUCCESS, payload: user });
 
-                    dispatch(reset('signup'));
-
-                    Actions.post();
+                    Actions.home();
                 });
         })
         .catch((error) => { dispatch({ type: SIGN_UP_FAILURE, payload: authFailMessage(error.code) }); });

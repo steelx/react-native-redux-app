@@ -1,6 +1,4 @@
-import firebase from 'firebase';
-import { Actions } from 'react-native-router-flux';
-import { reset } from 'redux-form';
+import { SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, SIGN_IN_REQUEST, SIGN_IN_SUCCESS, SIGN_IN_FAILURE, SET_INITIAL_STATE } from "../actions/auth.actions";
 
 /**
  |--------------------------------------------------

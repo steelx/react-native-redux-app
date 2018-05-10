@@ -31,8 +31,6 @@ export default class App extends React.Component {
       console.log("user", user);
       if (user) {
         store.dispatch({ type: SIGN_IN_SUCCESS, payload: user });
-      } else {
-        Actions.signin();
       }
     });
   }
