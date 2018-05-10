@@ -1,5 +1,6 @@
 // configureStore
 import { createStore, applyMiddleware, compose } from 'redux';
+import ReduxThunk from 'redux-thunk';
 import reducers from './reducers';
 
 function logger({ getState }) {
@@ -19,7 +20,8 @@ function logger({ getState }) {
 
 export default function configureStore() {
     const enhancer = compose(applyMiddleware(
-        logger
+        logger,
+        ReduxThunk
     ));
     const store = createStore(reducers, enhancer);
     return store;

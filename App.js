@@ -1,9 +1,12 @@
+import firebase from 'firebase';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Font, AppLoading } from "expo";
 import Routes from './src/Routes';
 import { Root } from 'native-base';
 import { Actions } from 'react-native-router-flux';
+import store from './src/configureStore';
+import config from './firebase.config';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -20,6 +23,18 @@ export default class App extends React.Component {
     });
     this.setState({ loading: false });
     Actions.home();
+
+    //firebase
+    firebase.initializeApp(config);
+    firebase.auth().onAuthStateChanged((user) => {
+      this.setState({ loaded: true });
+      console.log("user", user);
+      if (user) {
+        store.dispatch({ type: SIGN_IN_SUCCESS, payload: user });
+      } else {
+        Actions.signin();
+      }
+    });
   }
   render() {
     return (
