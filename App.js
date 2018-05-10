@@ -7,6 +7,7 @@ import { Root } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import store from './src/configureStore';
 import config from './firebase.config';
+import { SIGN_IN_SUCCESS } from './src/actions/auth.actions';
 
 export default class App extends React.Component {
   constructor(props) {

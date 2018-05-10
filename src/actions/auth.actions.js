@@ -31,13 +31,13 @@ export const signInUser = ({ email, password }) => (dispatch) => {
         .catch((error) => { dispatch({ type: SIGN_IN_FAILURE, payload: authFailMessage(error.code) }); });
 };
 
-export const signUpUser = ({ email, password, firstname, lastname }) => (dispatch) => {
+export const signUpUser = ({ username, firstname, lastname, email, password }) => (dispatch) => {
     dispatch({ type: SIGN_UP_REQUEST });
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((user) => {
             firebase.database().ref('users').child(user.uid)
-                .set({ firstname, lastname })
+                .set({ firstname, lastname, username })
                 .then(() => {
                     dispatch({ type: SIGN_UP_SUCCESS, payload: user });
 
