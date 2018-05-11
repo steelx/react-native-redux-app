@@ -7,7 +7,7 @@ import { Container, Content, Button, Text, Form, Item, Label, Input, Icon } from
 import styles from './styles';
 import NavHeader from '../common/NavHeader';
 
-import { signInUser, clearState } from '../../actions/auth.actions';
+import { signInUser, clearState } from '../../store/actions/auth.actions';
 
 const validate = (props) => {
     const errors = {};

@@ -6,7 +6,7 @@ import Signin from './components/scenes/Signin';
 import { Stack, Scene, Router } from 'react-native-router-flux';
 
 import { connect, Provider } from 'react-redux';
-import store from './configureStore';
+import store from './store/configureStore';
 import requireAuth from './utils/requireAuth.container';
 import requireAuthNOT from './utils/requireAuthNot.container';
 const RouterWithRedux = connect()(Router);

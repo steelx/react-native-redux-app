@@ -11,7 +11,7 @@ import {
 import NavHeader from './components/common/NavHeader';
 import FooterBottom from './components/common/FooterBottom';
 
-import { setTitle } from './actions/home.actions';
+import { setTitle } from './store/actions/home.actions';
 
 class Main extends Component {
     static propTypes = {

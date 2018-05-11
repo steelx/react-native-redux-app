@@ -5,9 +5,9 @@ import { Font, AppLoading } from "expo";
 import Routes from './src/Routes';
 import { Root } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import store from './src/configureStore';
+import store from './src/store/configureStore';
 import config from './firebase.config';
-import { SIGN_IN_SUCCESS } from './src/actions/auth.actions';
+import { SIGN_IN_SUCCESS } from './src/store/actions/auth.actions';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -15,6 +15,21 @@ export default class App extends React.Component {
     this.state = {
       loading: true
     }
+
+    //firebase
+    firebase.initializeApp(config);
+    firebase.auth().onAuthStateChanged((user) => {
+      // this.setState({ loading: false });
+      console.log("user", user);
+      if (user !== null) {
+        store.dispatch({ type: SIGN_IN_SUCCESS, payload: user });
+      }
+    });
+
+    // ignore firebase warn
+    console.ignoredYellowBox = [
+      'Setting a timer'
+    ];
   }
   async componentWillMount() {
     await Font.loadAsync({
@@ -23,17 +38,6 @@ export default class App extends React.Component {
       Ionicons: require("native-base/Fonts/Ionicons.ttf")
     });
     this.setState({ loading: false });
-    Actions.home();
-
-    //firebase
-    firebase.initializeApp(config);
-    firebase.auth().onAuthStateChanged((user) => {
-      this.setState({ loaded: true });
-      console.log("user", user);
-      if (user !== null) {
-        store.dispatch({ type: SIGN_IN_SUCCESS, payload: user });
-      }
-    });
   }
   render() {
     return (
