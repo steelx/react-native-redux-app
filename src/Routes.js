@@ -6,9 +6,9 @@ import Signin from './components/scenes/Signin';
 import { Stack, Scene, Router } from 'react-native-router-flux';
 
 import { connect, Provider } from 'react-redux';
-import configureStore from './configureStore';
+import store from './configureStore';
 import requireAuth from './utils/requireAuth.container';
-const store = configureStore();
+import requireAuthNOT from './utils/requireAuthNot.container';
 const RouterWithRedux = connect()(Router);
 
 const Routes = () => (
@@ -16,8 +16,8 @@ const Routes = () => (
         <RouterWithRedux>
             <Stack key="root">
                 <Stack key="auth">
-                    <Scene key="signin" hideNavBar component={Signin} title="Please Sign in" />
-                    <Scene key="signup" hideNavBar component={Signup} title="Register" />
+                    <Scene key="signin" hideNavBar component={requireAuthNOT(Signin)} title="Please Sign in" />
+                    <Scene key="signup" hideNavBar component={requireAuthNOT(Signup)} title="Register" />
                 </Stack>
                 <Stack key="main">
                     <Scene hideNavBar key="home" component={requireAuth(Main)} title="Home" />

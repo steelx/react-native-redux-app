@@ -5,7 +5,7 @@ import routes from './routes.reducer';
 import auth from './auth.reducer';
 
 export default combineReducers({
-    routes,    
+    routes,
     home,
     auth
 });

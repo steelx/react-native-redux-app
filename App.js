@@ -30,7 +30,7 @@ export default class App extends React.Component {
     firebase.auth().onAuthStateChanged((user) => {
       this.setState({ loaded: true });
       console.log("user", user);
-      if (user) {
+      if (user !== null) {
         store.dispatch({ type: SIGN_IN_SUCCESS, payload: user });
       }
     });

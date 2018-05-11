@@ -25,7 +25,6 @@ export const signInUser = ({ email, password }) => (dispatch) => {
     firebase.auth().signInWithEmailAndPassword(email, password)
         .then((user) => {
             dispatch({ type: SIGN_IN_SUCCESS, payload: user });
-
             Actions.home();
         })
         .catch((error) => { dispatch({ type: SIGN_IN_FAILURE, payload: authFailMessage(error.code) }); });
@@ -40,7 +39,6 @@ export const signUpUser = ({ username, firstname, lastname, email, password }) =
                 .set({ firstname, lastname, username })
                 .then(() => {
                     dispatch({ type: SIGN_UP_SUCCESS, payload: user });
-
                     Actions.home();
                 });
         })

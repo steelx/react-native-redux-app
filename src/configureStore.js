@@ -18,11 +18,9 @@ function logger({ getState }) {
     }
 }
 
-export default function configureStore() {
-    const enhancer = compose(applyMiddleware(
-        logger,
-        ReduxThunk
-    ));
-    const store = createStore(reducers, enhancer);
-    return store;
-}
+const enhancer = compose(applyMiddleware(
+    logger,
+    ReduxThunk
+));
+const store = createStore(reducers, enhancer);
+export default store;

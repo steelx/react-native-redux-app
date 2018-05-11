@@ -7,15 +7,8 @@ import { Container, Content, Button, Text, Form, Item, Label, Input, Icon } from
 import styles from './styles';
 import NavHeader from '../common/NavHeader';
 
-import { signUpUser } from '../../actions/auth.actions';
+import { signUpUser, clearState } from '../../actions/auth.actions';
 
-const propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  clearState: PropTypes.func.isRequired,
-  signInUser: PropTypes.func.isRequired,
-  authError: PropTypes.string.isRequired,
-  loading: PropTypes.bool.isRequired
-};
 const validate = (props) => {
   const errors = {};
   const fields = ['email', 'password', 'username'];
@@ -48,8 +41,8 @@ class Signup extends Component {
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
-  componentWillMount() {
-    // this.props.clearState();
+  componentDidMount() {
+    this.props.clearState();
   }
 
   handleFormSubmit() {
@@ -57,8 +50,8 @@ class Signup extends Component {
       username, firstname, lastname, email, password
     } = this.state;
 
-    this.setState({errors: validate({username, firstname, lastname, email, password})}, (state) => {
-      if(this.state.errors.valid !== false) {
+    this.setState({ errors: validate({ username, firstname, lastname, email, password }) }, (state) => {
+      if (this.state.errors.valid !== false) {
         this.props.signUpUser({ username, firstname, lastname, email, password });
       }
     });
@@ -75,9 +68,7 @@ class Signup extends Component {
         <NavHeader title="Sign in" hideIcons={true} />
         <Content>
           <Form>
-            <Item
-              floatingLabel
-              success={errors.username === false} error={errors.username === true}>
+            <Item floatingLabel error={errors.username === true}>
               <Label>Username</Label>
               <Input value={username} onChangeText={(val) => this.setState({ username: val })} />
             </Item>
@@ -92,23 +83,25 @@ class Signup extends Component {
               <Input value={lastname} onChangeText={(val) => this.setState({ lastname: val })} />
             </Item>
 
-            <Item floatingLabel
-              success={errors.email === false} error={errors.email === true}>
+            <Item floatingLabel error={errors.email === true}>
               <Label>Email</Label>
               <Input value={email} onChangeText={(val) => this.setState({ email: val })} />
             </Item>
 
-            <Item floatingLabel
-              success={errors.password === false} error={errors.password === true}>
+            <Item floatingLabel error={errors.password === true}>
               <Label>Password</Label>
               <Input value={password} onChangeText={(val) => this.setState({ password: val })} />
               <Icon name='checkmark-circle' />
             </Item>
 
+            {this.props.auth.error ?
+              <Item error style={{ paddingVertical: 20 }}>
+                <Text>{this.props.auth.error}</Text>
+              </Item> : null
+            }
             <Item last style={{ paddingVertical: 20 }}>
-              <Button onPress={this.handleFormSubmit} full>
+              <Button onPress={this.handleFormSubmit} full disabled={this.props.auth.loading}>
                 <Text>Sign-up</Text>
-                {errors.valid === false ? <Icon name='close-circle' /> : null}
               </Button>
             </Item>
 
@@ -129,13 +122,13 @@ class Signup extends Component {
 
 // Signup.propTypes = propTypes;
 
-function mapStateToProps({ home }) {
-  return { home }
+function mapStateToProps({ auth }) {
+  return { auth }
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    signUpUser
+    signUpUser, clearState
   }, dispatch);
 };
 
