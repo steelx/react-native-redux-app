@@ -29,10 +29,10 @@ class Main extends Component {
                 <NavHeader title={this.props.title} onLeftPress={() => Actions.signin()} />
                 <Content>
                     <Text>
-                        This is Content Section @Home {this.props.home.title}
+                        This is Content Section @Home
                     </Text>
-                    <Button onPress={() => this.props.setTitle('new home title')}>
-                        <Text>update title</Text>
+                    <Button onPress={() => Actions.profile()}>
+                        <Text>update profile</Text>
                     </Button>
                 </Content>
                 <FooterBottom />

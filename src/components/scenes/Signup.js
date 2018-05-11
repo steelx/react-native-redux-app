@@ -11,7 +11,7 @@ import { signUpUser, clearState } from '../../store/actions/auth.actions';
 
 const validate = (props) => {
   const errors = {};
-  const fields = ['email', 'password', 'username'];
+  const fields = ['email', 'password'];
 
   fields.forEach((f) => {
     if (!(f in props) || props[f] === '') {
@@ -30,7 +30,6 @@ class Signup extends Component {
     super(props);
 
     this.state = {
-      username: '',
       firstname: '',
       lastname: '',
       email: '',
@@ -47,12 +46,12 @@ class Signup extends Component {
 
   handleFormSubmit() {
     const {
-      username, firstname, lastname, email, password
+      firstname, lastname, email, password
     } = this.state;
 
-    this.setState({ errors: validate({ username, firstname, lastname, email, password }) }, (state) => {
+    this.setState({ errors: validate({ firstname, lastname, email, password }) }, (state) => {
       if (this.state.errors.valid !== false) {
-        this.props.signUpUser({ username, firstname, lastname, email, password });
+        this.props.signUpUser({ firstname, lastname, email, password });
       }
     });
   }
@@ -60,7 +59,7 @@ class Signup extends Component {
   render() {
     const { handleSubmit } = this.props;
     const {
-      username, firstname, lastname, email, password, errors
+      firstname, lastname, email, password, errors
     } = this.state;
 
     return (
@@ -68,11 +67,6 @@ class Signup extends Component {
         <NavHeader title="Sign in" hideIcons={true} />
         <Content>
           <Form>
-            <Item floatingLabel error={errors.username === true}>
-              <Label>Username</Label>
-              <Input value={username} onChangeText={(val) => this.setState({ username: val })} />
-            </Item>
-
             <Item floatingLabel>
               <Label>First name</Label>
               <Input value={firstname} onChangeText={(val) => this.setState({ firstname: val })} />

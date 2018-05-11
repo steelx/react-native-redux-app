@@ -3,6 +3,7 @@ import React from 'react';
 import Main from './Main';
 import Signup from './components/scenes/Signup';
 import Signin from './components/scenes/Signin';
+import Profile from './components/scenes/Profile';
 import { Stack, Scene, Router } from 'react-native-router-flux';
 
 import { connect, Provider } from 'react-redux';
@@ -21,6 +22,7 @@ const Routes = () => (
                 </Stack>
                 <Stack key="main">
                     <Scene hideNavBar key="home" component={requireAuth(Main)} title="Home" />
+                    <Scene hideNavBar key="profile" component={requireAuth(Profile)} title="Profile" />
                 </Stack>
             </Stack>
         </RouterWithRedux>

@@ -10,8 +10,8 @@ import config from './firebase.config';
 import { SIGN_IN_SUCCESS } from './src/store/actions/auth.actions';
 
 export default class App extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       loading: true
     }
