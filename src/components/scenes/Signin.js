@@ -7,7 +7,7 @@ import { Container, Content, Button, Text, Form, Item, Label, Input, Icon } from
 import styles from './styles';
 import NavHeader from '../common/NavHeader';
 
-import { signInUser, clearState } from '../../store/actions/auth.actions';
+import { signInUser, clearState, facebookLogin } from '../../store/actions/auth.actions';
 
 const validate = (props) => {
     const errors = {};
@@ -82,6 +82,14 @@ class Signin extends Component {
                                 <Text>Login</Text>
                             </Button>
                         </Item>
+                        <Item last style={{ paddingVertical: 5, borderBottomColor: 'transparent' }}>
+                            <Text>OR</Text>
+                        </Item>
+                        <Item style={{ borderBottomColor: 'transparent' }}>
+                            <Button onPress={() => this.props.facebookLogin()}>
+                                <Text>Login with Facebook</Text>
+                            </Button>
+                        </Item>
 
                         <Item last style={{ paddingVertical: 5, borderBottomColor: 'transparent' }}>
                             <Text>Don't have an account?</Text>
@@ -105,7 +113,7 @@ function mapStateToProps({ auth }) {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        signInUser, clearState
+        signInUser, clearState, facebookLogin
     }, dispatch);
 };
 

@@ -17,7 +17,7 @@ export default class FooterBottom extends Component {
                         <Text>Camera</Text>
                     </Button>
                     <Button active badge vertical>
-                        <Badge ><Text>51</Text></Badge>
+                        <Badge><Text>51</Text></Badge>
                         <Icon active name="navigate" />
                         <Text>Navigate</Text>
                     </Button>

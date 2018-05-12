@@ -1,5 +1,8 @@
 import firebase from 'firebase';
+import { AsyncStorage } from 'react-native';
+import { Facebook } from 'expo';
 import { Actions } from 'react-native-router-flux';
+import config from '../../../firebase.config';
 
 /**
  |--------------------------------------------------
@@ -14,6 +17,9 @@ export const SIGN_IN_SUCCESS = 'SIGN_IN_SUCCESS';
 export const SIGN_IN_FAILURE = 'SIGN_IN_FAILURE';
 export const SET_INITIAL_STATE = 'SET_INITIAL_STATE';
 export const PERMISSION_DENIED = 'PERMISSION_DENIED';
+export const FB_LOGIN_FAIL = 'FB_LOGIN_FAIL';
+export const FB_LOGIN_SUCCESS = 'FB_LOGIN_SUCCESS';
+export const FB_LOGIN_INIT = 'FB_LOGIN_INIT';
 
 /**
 |--------------------------------------------------
@@ -22,7 +28,7 @@ export const PERMISSION_DENIED = 'PERMISSION_DENIED';
 */
 export const signInUser = ({ email, password }) => (dispatch) => {
     dispatch({ type: SIGN_IN_REQUEST });
-console.log(email, password);
+    console.log(email, password);
     firebase.auth().signInWithEmailAndPassword(email, password)
         .then((user) => {
             dispatch({ type: SIGN_IN_SUCCESS, payload: user });
@@ -53,14 +59,42 @@ export const signUpUser = ({ firstname = "", lastname = "", email, password }) =
         .catch((error) => { dispatch({ type: SIGN_UP_FAILURE, payload: authFailMessage(error.code) }); });
 };
 
-export const clearState = () => (
-    { type: SET_INITIAL_STATE }
-);
+export const clearState = () => (dispatch) => {
+    dispatch({ type: SET_INITIAL_STATE });
+};
 
 export const signOutUser = () => (dispatch) => {
     dispatch({ type: SET_INITIAL_STATE });
-
     firebase.auth().signOut();
+};
+
+
+export const facebookLogin = () => async (dispatch) => {
+    dispatch({ type: FB_LOGIN_INIT });
+    doFacebookLogin(dispatch);
+};
+
+const doFacebookLogin = async (dispatch) => {
+    let { type, token } = await new Facebook.logInWithReadPermissionsAsync(config.fb_app_id, {
+        permissions: ['public_profile', 'email']
+    });
+console.log("type, token ", type, token);
+    if (type === 'cancel') {
+        return dispatch({ type: FB_LOGIN_FAIL });
+    }
+
+    if (type === 'success') {
+        // Get the user's name using Facebook's Graph API
+        const credentials = firebase.auth.FacebookAuthProvider.credential(token);
+        console.log("credentials ", credentials);
+        firebase.auth().signInWithCredential(credentials)
+            .catch(error => {
+                dispatch({ type: FB_LOGIN_FAIL });
+            });
+
+        // catch success at APP cdm DO NOT UNCOMMENT BELOW
+        // dispatch({type: FB_LOGIN_SUCCESS});
+    }
 };
 
 

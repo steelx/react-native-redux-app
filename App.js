@@ -13,14 +13,6 @@ import { SIGN_IN_SUCCESS } from './src/store/actions/auth.actions';
 console.ignoredYellowBox = [
   'Setting a timer'
 ];
-//firebase
-firebase.initializeApp(config);
-firebase.auth().onAuthStateChanged((user) => {
-  console.log("user", user);
-  if (user !== null) {
-    store.dispatch({ type: SIGN_IN_SUCCESS, payload: user });
-  }
-});
 
 export default class App extends React.Component {
   constructor() {
@@ -28,7 +20,17 @@ export default class App extends React.Component {
     this.state = {
       loading: true
     }
+    //firebase
+    firebase.initializeApp(config);
   }
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user !== null) {
+        store.dispatch({ type: SIGN_IN_SUCCESS, payload: user });
+      }
+    });
+  }
+
   async componentWillMount() {
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
