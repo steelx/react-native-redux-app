@@ -9,27 +9,25 @@ import store from './src/store/configureStore';
 import config from './firebase.config';
 import { SIGN_IN_SUCCESS } from './src/store/actions/auth.actions';
 
+// ignore firebase warn
+console.ignoredYellowBox = [
+  'Setting a timer'
+];
+//firebase
+firebase.initializeApp(config);
+firebase.auth().onAuthStateChanged((user) => {
+  console.log("user", user);
+  if (user !== null) {
+    store.dispatch({ type: SIGN_IN_SUCCESS, payload: user });
+  }
+});
+
 export default class App extends React.Component {
   constructor() {
     super();
     this.state = {
       loading: true
     }
-
-    //firebase
-    firebase.initializeApp(config);
-    firebase.auth().onAuthStateChanged((user) => {
-      // this.setState({ loading: false });
-      console.log("user", user);
-      if (user !== null) {
-        store.dispatch({ type: SIGN_IN_SUCCESS, payload: user });
-      }
-    });
-
-    // ignore firebase warn
-    console.ignoredYellowBox = [
-      'Setting a timer'
-    ];
   }
   async componentWillMount() {
     await Font.loadAsync({

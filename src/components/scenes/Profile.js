@@ -1,60 +1,91 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
+import { Actions } from 'react-native-router-flux';
 import { Image } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
 import NavHeader from '../common/NavHeader';
+import ImageUpload from '../common/ImageUpload';
 
-import { setTitle } from '../../store/actions/home.actions';
+import { setProfileLocation, getProfileLocation } from '../../store/actions/profile.actions';
+
+const getDateFromMs = (ms) => {
+    let dd = new Date(ms);
+    return ms ? dd.toString() : '-';
+};
 
 class Profile extends Component {
-  render() {
-    return (
-      <Container>
-        <NavHeader title={this.props.title} onLeftPress={() => Actions.signin()} />
-        <Content>
-          <Card>
-            <CardItem>
-              <Left>
-                <Thumbnail source={{uri: 'user thumb'}} />
-                <Body>
-                  <Text>User full name</Text>
-                  <Text note>currunt location</Text>
-                </Body>
-              </Left>
-            </CardItem>
-            <CardItem cardBody>
-              <Image source={{uri: 'user image'}} style={{height: 200, width: null, flex: 1}}/>
-            </CardItem>
-            <CardItem>
-              <Left>
-                <Button transparent disabled={true}>
-                  <Icon active name="thumbs-up" />
-                  <Text>Set location</Text>
-                </Button>
-              </Left>
+    constructor(props) {
+        super(props);
+    }
 
-              <Right>
-                <Text>last online 11h ago</Text>
-              </Right>
-            </CardItem>
-          </Card>
-        </Content>
-      </Container>
-    );
-  }
+    componentDidMount() {
+        const {auth} = this.props;
+        if (auth && auth.hasOwnProperty('user')) {
+            this.props.getProfileLocation({uid: auth.user.uid});
+        }
+    }
+
+    // componentWillUnmount() {
+    //     const {auth} = this.props;
+    //     this.props.offProfileLocation({uid: auth.user.uid});
+    // }
+
+    render() {
+        const {auth, profile, title} = this.props;
+
+        return (
+            <Container>
+                <NavHeader title={title} onLeftPress={() => Actions.signin()} />
+                <Content>
+                    <Card>
+                        <CardItem>
+                            <Left>
+                                <Thumbnail source={{ uri: 'user thumb' }} />
+                                <Body>
+                                    <Text>{auth.user.displayName}</Text>
+                                    <Text note>{profile.location}</Text>
+                                </Body>
+                            </Left>
+                        </CardItem>
+                        <CardItem cardBody>
+                            <Image source={{ uri: 'user image' }} style={{ height: 200, width: null, flex: 1 }} />
+                        </CardItem>
+                        <CardItem cardBody>
+                            <ImageUpload uid={auth.user.uid} />
+                        </CardItem>
+                        <CardItem>
+                            <Left>
+                                <Button 
+                                    onPress={() => this.props.setProfileLocation({location: '13,37', uid: auth.user.uid})}
+                                    disabled={profile.loading}
+                                    transparent>
+                                    <Icon active name="thumbs-up" />
+                                    <Text>Set location</Text>
+                                </Button>
+                            </Left>
+                            
+                            <Right>
+                                <Text>last login @ {getDateFromMs(auth.lastLoginAt)}</Text>
+                            </Right>
+                        </CardItem>
+                    </Card>
+                </Content>
+            </Container>
+        );
+    }
 }
 
-function mapStateToProps({ auth }) {
-    return { auth }
+function mapStateToProps({ auth, profile }) {
+    return { auth, profile }
 }
 
 // Maps `dispatch` to `props`:
 function mapDispatchToProps(dispatch) {
     /* code change */
     return bindActionCreators({
-        setTitle
+        setProfileLocation,
+        getProfileLocation
     }, dispatch);
 };
 

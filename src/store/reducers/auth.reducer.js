@@ -1,4 +1,4 @@
-import { SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, SIGN_IN_REQUEST, SIGN_IN_SUCCESS, SIGN_IN_FAILURE, SET_INITIAL_STATE } from "../actions/auth.actions";
+import { SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, SIGN_IN_REQUEST, SIGN_IN_SUCCESS, SIGN_IN_FAILURE, SET_INITIAL_STATE, PERMISSION_DENIED } from "../actions/auth.actions";
 
 /**
  |--------------------------------------------------
@@ -27,6 +27,8 @@ const reducer = (state = INITIAL_STATE, action) => {
       return { ...state, ...INITIAL_STATE, error: action.payload };
     case SET_INITIAL_STATE:
       return { ...state, ...INITIAL_STATE };
+    case PERMISSION_DENIED:
+      return {...state, ...INITIAL_STATE };
     default:
       return state;
   }

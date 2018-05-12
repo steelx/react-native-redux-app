@@ -13,6 +13,7 @@ export const SIGN_IN_REQUEST = 'SIGN_IN_REQUEST';
 export const SIGN_IN_SUCCESS = 'SIGN_IN_SUCCESS';
 export const SIGN_IN_FAILURE = 'SIGN_IN_FAILURE';
 export const SET_INITIAL_STATE = 'SET_INITIAL_STATE';
+export const PERMISSION_DENIED = 'PERMISSION_DENIED';
 
 /**
 |--------------------------------------------------
@@ -21,7 +22,7 @@ export const SET_INITIAL_STATE = 'SET_INITIAL_STATE';
 */
 export const signInUser = ({ email, password }) => (dispatch) => {
     dispatch({ type: SIGN_IN_REQUEST });
-
+console.log(email, password);
     firebase.auth().signInWithEmailAndPassword(email, password)
         .then((user) => {
             dispatch({ type: SIGN_IN_SUCCESS, payload: user });
@@ -35,12 +36,19 @@ export const signUpUser = ({ firstname = "", lastname = "", email, password }) =
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((user) => {
-            firebase.database().ref('users').child(user.uid)
-                .set({ firstname, lastname })
-                .then(() => {
-                    dispatch({ type: SIGN_UP_SUCCESS, payload: user });
-                    Actions.home();
-                });
+
+            const currentUser = firebase.auth().currentUser;
+            currentUser.updateProfile({
+                displayName: `${firstname} ${lastname}`
+            })
+
+            // THIS DOES NOT WORK
+            // firebase.database().ref('users/' + user.uid)
+            //     .set({ "firstname": 'AJINKYA', "lastname": 'AJINKYA', "location": "55,44" })
+            //     .then(() => {
+            //         dispatch({ type: SIGN_UP_SUCCESS, payload: user });
+            //         Actions.home();
+            //     });
         })
         .catch((error) => { dispatch({ type: SIGN_UP_FAILURE, payload: authFailMessage(error.code) }); });
 };

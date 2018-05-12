@@ -26,7 +26,7 @@ class Main extends Component {
     render() {
         return (
             <Container>
-                <NavHeader title={this.props.title} onLeftPress={() => Actions.signin()} />
+                <NavHeader title={this.props.title} />
                 <Content>
                     <Text>
                         This is Content Section @Home
