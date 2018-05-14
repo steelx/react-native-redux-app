@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import { Constants, ImagePicker } from 'expo';
 import uuid from 'uuid';
-import config from '../../../firebase.config';
 
 export default class ImageUpload extends React.Component {
   state = {
@@ -133,10 +132,7 @@ export default class ImageUpload extends React.Component {
       this.setState({ uploading: true });
 
       if (!pickerResult.cancelled) {
-        console.log("INSIDE pickerResult");
         uploadUrl = await uploadImageAsync(pickerResult.uri, this.props.uid, this.props.firebase);
-        console.log("uploadUrl", uploadUrl);
-        console.log("this.props.uid", this.props.uid);
         this.setState({ image: uploadUrl });
       }
     } catch (e) {
@@ -151,14 +147,13 @@ export default class ImageUpload extends React.Component {
 async function uploadImageAsync(uri, uid, firebase) {
   console.log("uploadImageAsync uri", uri);
   const response = await fetch(uri);
-  console.log("response", response);
   const blob = await response.blob();
   console.log("blob", blob);
   const ref = firebase
     .storage()
-    .ref('users/' + uid)
-    .child(uuid.v4());
-
+    .ref()
+    .child(`users/${uid}/${uuid.v4()}`);
+    // console.log("ref", ref);
   const snapshot = await ref.put(blob);
   return snapshot.downloadURL;
 }

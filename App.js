@@ -10,9 +10,9 @@ import config from './firebase.config';
 import { SIGN_IN_SUCCESS } from './src/store/actions/auth.actions';
 
 // ignore firebase warn
-// console.ignoredYellowBox = [
-//   'Setting a timer'
-// ];
+console.ignoredYellowBox = [
+  'Setting a timer'
+];
 
 export default class App extends React.Component {
   constructor() {

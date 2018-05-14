@@ -14,7 +14,7 @@ export const setProfileLocation = ({ location, uid }) => (dispatch) => {
     dispatch({ type: SET_PROFILE_LOCATION_INIT });
 
     firebase.database().ref('users/' + uid)
-        .set({ location })
+        .update({ location })
         .then(() => {
             dispatch({ type: SET_PROFILE_LOCATION_SUCCESS, payload: location });
         })

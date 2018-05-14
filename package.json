@@ -4,7 +4,7 @@
   "dependencies": {
     "@expo/vector-icons": "^6.3.1",
     "expo": "^27.0.1",
-    "firebase": "^5.0.1",
+    "firebase": "^5.0.2",
     "native-base": "^2.4.3",
     "prop-types": "^15.6.1",
     "react": "16.3.1",
