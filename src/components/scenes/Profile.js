@@ -1,3 +1,4 @@
+import firebase from 'firebase';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -41,7 +42,7 @@ class Profile extends Component {
                     <Card>
                         <CardItem>
                             <Left>
-                                <Thumbnail source={{ uri: 'user thumb' }} />
+                                <Thumbnail source={{ uri: auth.user.photoURL }} />
                                 <Body>
                                     <Text>{auth.user.displayName}</Text>
                                     <Text note>{profile.location}</Text>
@@ -49,10 +50,10 @@ class Profile extends Component {
                             </Left>
                         </CardItem>
                         <CardItem cardBody>
-                            <Image source={{ uri: 'user image' }} style={{ height: 200, width: null, flex: 1 }} />
+                            <Image source={{ uri: auth.user.photoURL }} style={{ height: 200, width: null, flex: 1 }} />
                         </CardItem>
                         <CardItem cardBody>
-                            <ImageUpload uid={auth.user.uid} />
+                            <ImageUpload firebase={firebase} uid={auth.user.uid} />
                         </CardItem>
                         <CardItem>
                             <Left>

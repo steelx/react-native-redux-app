@@ -1,3 +1,4 @@
+// import firebase from 'firebase';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -13,10 +14,7 @@ import {
 } from 'react-native';
 import { Constants, ImagePicker } from 'expo';
 import uuid from 'uuid';
-import firebase from 'firebase';
 import config from '../../../firebase.config';
-
-const url = config.storageUrl;
 
 export default class ImageUpload extends React.Component {
   state = {
@@ -34,7 +32,7 @@ export default class ImageUpload extends React.Component {
           title="Pick an image from camera roll"
         />
 
-        <Button onPress={this._takePhoto} title="Take a photo" />
+        {/* <Button onPress={this._takePhoto} title="Take a photo" /> */}
 
         {this._maybeRenderImage()}
         {this._maybeRenderUploadingOverlay()}
@@ -135,7 +133,10 @@ export default class ImageUpload extends React.Component {
       this.setState({ uploading: true });
 
       if (!pickerResult.cancelled) {
-        uploadUrl = await uploadImageAsync(pickerResult.uri, this.props.uid);
+        console.log("INSIDE pickerResult");
+        uploadUrl = await uploadImageAsync(pickerResult.uri, this.props.uid, this.props.firebase);
+        console.log("uploadUrl", uploadUrl);
+        console.log("this.props.uid", this.props.uid);
         this.setState({ image: uploadUrl });
       }
     } catch (e) {
@@ -147,9 +148,12 @@ export default class ImageUpload extends React.Component {
   };
 }
 
-async function uploadImageAsync(uri, uid) {
+async function uploadImageAsync(uri, uid, firebase) {
+  console.log("uploadImageAsync uri", uri);
   const response = await fetch(uri);
+  console.log("response", response);
   const blob = await response.blob();
+  console.log("blob", blob);
   const ref = firebase
     .storage()
     .ref('users/' + uid)

@@ -78,21 +78,21 @@ const doFacebookLogin = async (dispatch) => {
     let { type, token } = await new Facebook.logInWithReadPermissionsAsync(config.fb_app_id, {
         permissions: ['public_profile', 'email']
     });
-console.log("type, token ", type, token);
+
     if (type === 'cancel') {
-        return dispatch({ type: FB_LOGIN_FAIL });
+        return dispatch({ type: FB_LOGIN_FAIL, payload: 'USER_CANCELED' });
     }
 
     if (type === 'success') {
         // Get the user's name using Facebook's Graph API
         const credentials = firebase.auth.FacebookAuthProvider.credential(token);
-        console.log("credentials ", credentials);
-        firebase.auth().signInWithCredential(credentials)
+        
+        firebase.auth().signInAndRetrieveDataWithCredential(credentials)
             .catch(error => {
-                dispatch({ type: FB_LOGIN_FAIL });
+                dispatch({ type: FB_LOGIN_FAIL, payload: 'FB_AUTH_FAILED' });
             });
 
-        // catch success at APP cdm DO NOT UNCOMMENT BELOW
+        // catch success at App.js cdm DO NOT UNCOMMENT BELOW
         // dispatch({type: FB_LOGIN_SUCCESS});
     }
 };

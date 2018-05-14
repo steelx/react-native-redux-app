@@ -10,9 +10,9 @@ import config from './firebase.config';
 import { SIGN_IN_SUCCESS } from './src/store/actions/auth.actions';
 
 // ignore firebase warn
-console.ignoredYellowBox = [
-  'Setting a timer'
-];
+// console.ignoredYellowBox = [
+//   'Setting a timer'
+// ];
 
 export default class App extends React.Component {
   constructor() {
@@ -20,10 +20,10 @@ export default class App extends React.Component {
     this.state = {
       loading: true
     }
-    //firebase
-    firebase.initializeApp(config);
   }
   componentDidMount() {
+    //firebase
+    firebase.initializeApp(config);
     firebase.auth().onAuthStateChanged((user) => {
       if (user !== null) {
         store.dispatch({ type: SIGN_IN_SUCCESS, payload: user });
