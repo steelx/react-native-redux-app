@@ -8,28 +8,30 @@ import {
 } from "../actions/profile.actions";
 // Reducer
 const INITIAL_STATE = {
-    location: '',
+    location: '00, 00',
+    thumbnail: 'https://placekitten.com/g/100/100',
+    photo: 'https://placekitten.com/g/640/640',
     loading: false
 };
 export default function profileReducer(state = INITIAL_STATE, action) {
     switch (action.type) {
         case SET_PROFILE_LOCATION_INIT:
-            return { ...state, ...INITIAL_STATE, loading: true };
+            return { ...state, loading: true };
 
         case SET_PROFILE_LOCATION_SUCCESS:
-            return { ...state, ...INITIAL_STATE, location: action.payload };
+            return { ...state, loading: false, location: action.payload.location };
 
         case SET_PROFILE_LOCATION_ERROR:
-            return { ...state, ...INITIAL_STATE, error: action.payload };
+            return { ...state, loading: false, error: action.payload };
 
         case GET_PROFILE_LOCATION_INIT:
-            return { ...state, ...INITIAL_STATE, loading: true };
+            return { ...state, loading: true };
 
         case GET_PROFILE_LOCATION_SUCCESS:
-            return { ...state, ...INITIAL_STATE, location: action.payload };
+            return { ...state, loading: false, ...action.payload };
 
         case GET_PROFILE_LOCATION_ERROR:
-            return { ...state, ...INITIAL_STATE, error: action.payload };
+            return { ...state, loading: false, error: action.payload };
 
         default:
             return state

@@ -42,7 +42,7 @@ class Profile extends Component {
                     <Card>
                         <CardItem>
                             <Left>
-                                <Thumbnail source={{ uri: auth.user.photoURL }} />
+                                <Thumbnail source={{ uri: auth.user.photoURL || profile.thumbnail }} />
                                 <Body>
                                     <Text>{auth.user.displayName}</Text>
                                     <Text note>{profile.location}</Text>
@@ -50,10 +50,10 @@ class Profile extends Component {
                             </Left>
                         </CardItem>
                         <CardItem cardBody>
-                            <Image source={{ uri: auth.user.photoURL }} style={{ height: 200, width: null, flex: 1 }} />
+                            <Image source={{ uri: profile.photo }} style={{ height: 300, width: 300, flex: 1 }} />
                         </CardItem>
                         <CardItem cardBody>
-                            <ImageUpload firebase={firebase} uid={auth.user.uid} />
+                            <ImageUpload firebase={firebase} uid={auth.user.uid} disabled={profile.loading} />
                         </CardItem>
                         <CardItem>
                             <Left>

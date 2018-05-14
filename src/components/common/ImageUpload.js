@@ -27,8 +27,8 @@ export default class ImageUpload extends React.Component {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Button
-          onPress={this._pickImage}
-          title="Pick an image from camera roll"
+          onPress={this._pickImage} disabled={this.props.disabled}
+          title="Pick an image from gallery"
         />
 
         {/* <Button onPress={this._takePhoto} title="Take a photo" /> */}
@@ -51,6 +51,8 @@ export default class ImageUpload extends React.Component {
               backgroundColor: 'rgba(0,0,0,0.4)',
               alignItems: 'center',
               justifyContent: 'center',
+              height: 200,
+              flex: 1
             },
           ]}>
           <ActivityIndicator color="#fff" animating size="large" />

@@ -26,14 +26,11 @@ class Main extends Component {
     render() {
         return (
             <Container>
-                <NavHeader title={this.props.title} />
+                <NavHeader title={this.props.title} onRightPress={() => Actions.profile()} />
                 <Content>
                     <Text>
                         This is Content Section @Home
                     </Text>
-                    <Button onPress={() => Actions.profile()}>
-                        <Text>update profile</Text>
-                    </Button>
                 </Content>
                 <FooterBottom />
             </Container>

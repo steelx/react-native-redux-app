@@ -16,7 +16,7 @@ export const setProfileLocation = ({ location, uid }) => (dispatch) => {
     firebase.database().ref('users/' + uid)
         .update({ location })
         .then(() => {
-            dispatch({ type: SET_PROFILE_LOCATION_SUCCESS, payload: location });
+            dispatch({ type: SET_PROFILE_LOCATION_SUCCESS, payload: { location } });
         })
         .catch((error) => {
             dispatch({
@@ -31,29 +31,29 @@ export const getProfileLocation = ({ uid }) => (dispatch, getState) => {
     dispatch({ type: GET_PROFILE_LOCATION_INIT });
     let usersDb = firebase.database().ref('users/' + uid);
     console.log("usersDb", usersDb);
-    // usersDb.on('value', (snapshot) => {
-    //     console.log("snapshot", snapshot.val());
-    //     let location = (snapshot.val() && snapshot.val().location) || '00, 00';
-    //     dispatch({ type: GET_PROFILE_LOCATION_SUCCESS, payload: location });
-    // });
+    usersDb.on('value', (snapshot) => {
+        console.log("snapshot", snapshot.val());
+        // let location = (snapshot.val() && snapshot.val().location) || '00, 00';
+        dispatch({ type: GET_PROFILE_LOCATION_SUCCESS, payload: snapshot.val() });
+    });
 
-    usersDb.once('value')
-        .then((snapshot) => {
-            console.log("snapshot", snapshot.val());
-            let location = (snapshot.val() && snapshot.val().location) || '00, 00';
-            dispatch({ type: GET_PROFILE_LOCATION_SUCCESS, payload: location });
-        })
-        .catch((error) => {
-            dispatch({
-                type: GET_PROFILE_LOCATION_ERROR,
-                payload: error.code
-            });
+    // usersDb.once('value')
+    //     .then((snapshot) => {
+    //         console.log("snapshot", snapshot.val());
+    //         let location = (snapshot.val() && snapshot.val().location) || '00, 00';
+    //         dispatch({ type: GET_PROFILE_LOCATION_SUCCESS, payload: location });
+    //     })
+    //     .catch((error) => {
+    //         dispatch({
+    //             type: GET_PROFILE_LOCATION_ERROR,
+    //             payload: error.code
+    //         });
 
-            if (error.code === PERMISSION_DENIED) {
-                //logout user
-                dispatch({ type: PERMISSION_DENIED }); // auth reducer
-            }
-        });
+    //         if (error.code === PERMISSION_DENIED) {
+    //             //logout user
+    //             dispatch({ type: PERMISSION_DENIED }); // auth reducer
+    //         }
+    //     });
 };
 
 
