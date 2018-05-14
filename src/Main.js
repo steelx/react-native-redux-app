@@ -4,14 +4,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Actions } from 'react-native-router-flux';
 import {
-    Container, Header, Title, Content, Footer, FooterTab,
-    Button, Left, Right, Body, Icon, Text
+    Container, Content, Button, Text, Item
 } from 'native-base';
 
 import NavHeader from './components/common/NavHeader';
 import FooterBottom from './components/common/FooterBottom';
+import UserCard from './components/common/UserCard';
 
-import { setTitle } from './store/actions/home.actions';
+import { getUsers } from './store/actions/home.actions';
 
 class Main extends Component {
     static propTypes = {
@@ -28,9 +28,19 @@ class Main extends Component {
             <Container>
                 <NavHeader title={this.props.title} onRightPress={() => Actions.profile()} />
                 <Content>
-                    <Text>
-                        This is Content Section @Home
-                    </Text>
+
+                    {
+                        this.props.home.users.length ?
+                            this.props.home.users.map(user => <UserCard key={user.id} {...user} />)
+                            : null
+                    }
+
+
+                    <Item>
+                        <Button onPress={() => this.props.getUsers()}>
+                            <Text>Load users</Text>
+                        </Button>
+                    </Item>
                 </Content>
                 <FooterBottom />
             </Container>
@@ -46,7 +56,7 @@ function mapStateToProps({ home }) {
 function mapDispatchToProps(dispatch) {
     /* code change */
     return bindActionCreators({
-        setTitle
+        getUsers
     }, dispatch);
 };
 

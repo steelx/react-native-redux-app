@@ -8,10 +8,11 @@ import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Ic
 import NavHeader from '../common/NavHeader';
 import ImageUpload from '../common/ImageUpload';
 
-import { setProfileLocation, getProfileLocation } from '../../store/actions/profile.actions';
+import { setProfileLocation, getProfileLocation, offProfileLocation } from '../../store/actions/profile.actions';
 
 const getDateFromMs = (ms) => {
-    let dd = new Date(ms);
+    let _ms = typeof ms === "string" ? Number(ms) : ms;
+    let dd = new Date(_ms);
     return ms ? dd.toString() : '-';
 };
 
@@ -27,17 +28,17 @@ class Profile extends Component {
         }
     }
 
-    // componentWillUnmount() {
-    //     const {auth} = this.props;
-    //     this.props.offProfileLocation({uid: auth.user.uid});
-    // }
+    componentWillUnmount() {
+        const {auth} = this.props;
+        this.props.offProfileLocation({uid: auth.user.uid});
+    }
 
     render() {
         const {auth, profile, title} = this.props;
 
         return (
             <Container>
-                <NavHeader title={title} onLeftPress={() => Actions.signin()} />
+                <NavHeader title={title} />
                 <Content>
                     <Card>
                         <CardItem>
@@ -67,7 +68,7 @@ class Profile extends Component {
                             </Left>
                             
                             <Right>
-                                <Text>last login @ {getDateFromMs(auth.lastLoginAt)}</Text>
+                                <Text>last login @ {getDateFromMs(auth.user.metadata.b)}</Text>
                             </Right>
                         </CardItem>
                     </Card>
@@ -86,7 +87,8 @@ function mapDispatchToProps(dispatch) {
     /* code change */
     return bindActionCreators({
         setProfileLocation,
-        getProfileLocation
+        getProfileLocation,
+        offProfileLocation
     }, dispatch);
 };
 

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Keyboard } from 'react-native'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Actions } from 'react-native-router-flux';
@@ -49,6 +50,7 @@ class Signin extends Component {
             if (this.state.errors.valid !== false) {
                 this.props.signInUser({ email, password });
             }
+            Keyboard.dismiss();
         });
     }
 
