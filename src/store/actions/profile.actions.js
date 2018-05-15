@@ -11,6 +11,8 @@ export const GET_PROFILE_LOCATION_INIT = "GET_PROFILE_LOCATION_INIT";
 export const GET_PROFILE_LOCATION_ERROR = "GET_PROFILE_LOCATION_ERROR";
 export const GET_PROFILE_LOCATION_SUCCESS = "GET_PROFILE_LOCATION_SUCCESS";
 
+export const PROFILE_INITIAL_STATE = "PROFILE_INITIAL_STATE";
+
 export const setProfileLocation = ({ location, uid }) => (dispatch) => {
     dispatch({ type: SET_PROFILE_LOCATION_INIT });
 
@@ -64,3 +66,6 @@ export const offProfileLocation = ({ uid }) => (dispatch, getState) => {
     firebase.database().ref('users/' + uid).off();
 };
 
+export const clearProfile = () => (dispatch) => {
+    dispatch({ type: PROFILE_INITIAL_STATE });
+};

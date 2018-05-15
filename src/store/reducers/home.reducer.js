@@ -1,13 +1,13 @@
-import { SET_TITLE, GET_USERS_INIT, GET_USERS_SUCCESS, GET_USERS_ERROR } from "../actions/home.actions";
+import { SET_TITLE, GET_USERS_INIT, GET_USERS_SUCCESS, GET_USERS_ERROR, USERS_INITIAL_STATE } from "../actions/home.actions";
 
 // Reducer
-const initialState = {
+const INITIAL_STATE = {
     title: 'Home',
     welcome: 'welcome to home',
     loading: false,
     users: []
 };
-export default function homeReducer(state = initialState, action) {
+export default function homeReducer(state = INITIAL_STATE, action) {
     switch (action.type) {
         case SET_TITLE:
             return { ...state, title: action.value };
@@ -22,6 +22,9 @@ export default function homeReducer(state = initialState, action) {
             };
         case GET_USERS_ERROR:
             return { ...state, loading: false };
+
+        case USERS_INITIAL_STATE:
+            return { ...state, ...INITIAL_STATE };
 
         default:
             return state

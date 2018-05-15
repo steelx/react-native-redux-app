@@ -1,17 +1,24 @@
+import {KITTEN_SMALL, KITTEN_BIG} from '../../utils/constants';
 import {
     SET_PROFILE_LOCATION_INIT,
     SET_PROFILE_LOCATION_SUCCESS,
     SET_PROFILE_LOCATION_ERROR,
     GET_PROFILE_LOCATION_INIT,
     GET_PROFILE_LOCATION_SUCCESS,
-    GET_PROFILE_LOCATION_ERROR
+    GET_PROFILE_LOCATION_ERROR,
+    PROFILE_INITIAL_STATE
 } from "../actions/profile.actions";
 // Reducer
 const INITIAL_STATE = {
     location: '00, 00',
-    thumbnail: 'https://placekitten.com/g/100/100',
-    photo: 'https://placekitten.com/g/640/640',
-    loading: false
+    thumbnail: KITTEN_SMALL,
+    photo: KITTEN_BIG,
+    loading: false,
+    fbData: {},
+    metadata: {},
+    uid: null,
+    email: null,
+    displayName: null
 };
 export default function profileReducer(state = INITIAL_STATE, action) {
     switch (action.type) {
@@ -32,6 +39,9 @@ export default function profileReducer(state = INITIAL_STATE, action) {
 
         case GET_PROFILE_LOCATION_ERROR:
             return { ...state, loading: false, error: action.payload };
+
+        case PROFILE_INITIAL_STATE:
+            return {...state, ...INITIAL_STATE};
 
         default:
             return state

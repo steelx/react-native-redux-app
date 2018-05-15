@@ -31,7 +31,7 @@ class Main extends Component {
 
                     {
                         this.props.home.users.length ?
-                            this.props.home.users.map(user => <UserCard key={user.id} {...user} />)
+                            this.props.home.users.map(user => <UserCard key={user.uid} {...user} />)
                             : null
                     }
 

@@ -4,17 +4,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Actions } from 'react-native-router-flux';
 import { Image } from 'react-native';
-import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
+import { Container, Header, Content } from 'native-base';
 import NavHeader from '../common/NavHeader';
-import ImageUpload from '../common/ImageUpload';
+import ProfileComponent from '../common/Profile.component';
 
 import { setProfileLocation, getProfileLocation, offProfileLocation } from '../../store/actions/profile.actions';
-
-const getDateFromMs = (ms) => {
-    let _ms = typeof ms === "string" ? Number(ms) : ms;
-    let dd = new Date(_ms);
-    return ms ? dd.toString() : '-';
-};
 
 class Profile extends Component {
     constructor(props) {
@@ -34,44 +28,17 @@ class Profile extends Component {
     }
 
     render() {
-        const {auth, profile, title} = this.props;
+        const {auth, profile, title, setProfileLocation} = this.props;
 
         return (
             <Container>
                 <NavHeader title={title} />
                 <Content>
-                    <Card>
-                        <CardItem>
-                            <Left>
-                                <Thumbnail source={{ uri: auth.user.photoURL || profile.thumbnail }} />
-                                <Body>
-                                    <Text>{auth.user.displayName}</Text>
-                                    <Text note>{profile.location}</Text>
-                                </Body>
-                            </Left>
-                        </CardItem>
-                        <CardItem cardBody>
-                            <Image source={{ uri: profile.photo }} style={{ height: 300, width: 300, flex: 1 }} />
-                        </CardItem>
-                        <CardItem cardBody>
-                            <ImageUpload firebase={firebase} uid={auth.user.uid} disabled={profile.loading} />
-                        </CardItem>
-                        <CardItem>
-                            <Left>
-                                <Button 
-                                    onPress={() => this.props.setProfileLocation({location: '13,37', uid: auth.user.uid})}
-                                    disabled={profile.loading}
-                                    transparent>
-                                    <Icon active name="thumbs-up" />
-                                    <Text>Set location</Text>
-                                </Button>
-                            </Left>
-                            
-                            <Right>
-                                <Text>last login @ {getDateFromMs(auth.user.metadata.b)}</Text>
-                            </Right>
-                        </CardItem>
-                    </Card>
+                    <ProfileComponent 
+                        thumbnail={auth.user.photoURL || profile.thumbnail}
+                        displayName={auth.user.displayName} location={profile.location} photo={profile.photo} 
+                        uid={auth.user.uid} loading={profile.loading || auth.loading} setProfileLocation={setProfileLocation} lastSeen={auth.user.metadata.b} />
+                    
                 </Content>
             </Container>
         );

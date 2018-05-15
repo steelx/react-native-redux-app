@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Header, Content, Footer, FooterTab, Button, Icon, Text, Badge } from 'native-base';
+import { Actions } from 'react-native-router-flux';
 
 export default class FooterBottom extends Component {
     // state = {}
@@ -21,9 +22,9 @@ export default class FooterBottom extends Component {
                         <Icon active name="navigate" />
                         <Text>Navigate</Text>
                     </Button>
-                    <Button vertical>
+                    <Button onPress={() => Actions.profile()} vertical>
                         <Icon name="person" />
-                        <Text>Contact</Text>
+                        <Text>Profile</Text>
                     </Button>
                 </FooterTab>
             </Footer>

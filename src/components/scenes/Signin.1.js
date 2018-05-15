@@ -9,8 +9,6 @@ import styles from './styles';
 import NavHeader from '../common/NavHeader';
 
 import { signInUser, clearState, facebookLogin } from '../../store/actions/auth.actions';
-import {clearProfile} from '../../store/actions/profile.actions';
-import {clearUsers} from '../../store/actions/home.actions';
 
 const validate = (props) => {
     const errors = {};
@@ -43,8 +41,6 @@ class Signin extends Component {
 
     componentWillMount() {
         this.props.clearState();
-        this.props.clearUsers();
-        this.props.clearProfile();
     }
 
     handleFormSubmit(props) {
@@ -59,17 +55,50 @@ class Signin extends Component {
     }
 
     render() {
-        const { handleSubmit, auth } = this.props;
+        const { handleSubmit } = this.props;
         const { email, password, errors } = this.state;
 
         return (
             <Container style={styles.container}>
-                <NavHeader title="Login" hideIcons={true} />
+                <NavHeader title="Sign in" hideIcons={true} />
                 <Content>
                     <Form>
+                        <Item floatingLabel error={errors.email === true}>
+                            <Label>Email</Label>
+                            <Input value={email} onChangeText={(val) => this.setState({ email: val })} />
+                        </Item>
+
+                        <Item floatingLabel error={errors.password === true}>
+                            <Label>Password</Label>
+                            <Input value={password} onChangeText={(val) => this.setState({ password: val })} />
+                            <Icon name='checkmark-circle' />
+                        </Item>
+
+                        {this.props.auth.error ?
+                            <Item error style={{ paddingVertical: 20 }}>
+                                <Text>{this.props.auth.error}</Text>
+                            </Item> : null
+                        }
+                        <Item last style={{ paddingVertical: 20 }}>
+                            <Button onPress={this.handleFormSubmit} full disabled={this.props.auth.loading}>
+                                <Text>Login</Text>
+                            </Button>
+                        </Item>
+                        <Item last style={{ paddingVertical: 5, borderBottomColor: 'transparent' }}>
+                            <Text>OR</Text>
+                        </Item>
                         <Item style={{ borderBottomColor: 'transparent' }}>
-                            <Button onPress={() => this.props.facebookLogin()} disabled={auth.loading}>
+                            <Button onPress={() => this.props.facebookLogin()}>
                                 <Text>Login with Facebook</Text>
+                            </Button>
+                        </Item>
+
+                        <Item last style={{ paddingVertical: 5, borderBottomColor: 'transparent' }}>
+                            <Text>Don't have an account?</Text>
+                        </Item>
+                        <Item style={{ borderBottomColor: 'transparent' }}>
+                            <Button onPress={() => Actions.signup()}>
+                                <Text>Click here to sign up</Text>
                             </Button>
                         </Item>
                     </Form>
@@ -86,7 +115,7 @@ function mapStateToProps({ auth }) {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        signInUser, clearState, facebookLogin, clearProfile, clearUsers
+        signInUser, clearState, facebookLogin
     }, dispatch);
 };
 

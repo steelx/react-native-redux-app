@@ -10,6 +10,7 @@ import { connect, Provider } from 'react-redux';
 import store from './store/configureStore';
 import requireAuth from './utils/requireAuth.container';
 import requireAuthNOT from './utils/requireAuthNot.container';
+import OtherProfile from './components/scenes/OtherProfile';
 const RouterWithRedux = connect()(Router);
 
 const Routes = () => (
@@ -23,6 +24,7 @@ const Routes = () => (
                 <Stack key="main">
                     <Scene hideNavBar key="home" component={requireAuth(Main)} title="Home" />
                     <Scene hideNavBar key="profile" component={requireAuth(Profile)} title="Profile" />
+                    <Scene hideNavBar key="otherprofile" component={requireAuth(OtherProfile)} />
                 </Stack>
             </Stack>
         </RouterWithRedux>
