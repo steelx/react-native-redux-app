@@ -1,4 +1,4 @@
-import { SET_TITLE, GET_USERS_INIT, GET_USERS_SUCCESS, GET_USERS_ERROR, USERS_INITIAL_STATE } from "../actions/home.actions";
+import { SET_TITLE, GET_USERS_INIT, GET_USERS_SUCCESS, GET_USERS_ERROR, USERS_INITIAL_STATE, NEXT_USERS_INIT, NEXT_USERS_SUCCESS, NEXT_USERS_ERROR } from "../actions/home.actions";
 
 // Reducer
 const INITIAL_STATE = {
@@ -17,10 +17,21 @@ export default function homeReducer(state = INITIAL_STATE, action) {
         case GET_USERS_SUCCESS:
             return {
                 ...state,
-                users: [...state.users, ...action.payload],
+                users: [...action.payload],
                 loading: false
             };
         case GET_USERS_ERROR:
+            return { ...state, loading: false };
+
+        case NEXT_USERS_INIT:
+            return { ...state, loading: true };
+        case NEXT_USERS_SUCCESS:
+            return {
+                ...state,
+                users: [...state.users, ...action.payload],
+                loading: false
+            };
+        case NEXT_USERS_ERROR:
             return { ...state, loading: false };
 
         case USERS_INITIAL_STATE:

@@ -1,6 +1,8 @@
 node_modules/**/*
 .expo/*
 npm-debug.*
+.idea
+.idea/*
 .vscode
 .DS_Store
 firebase.config.js

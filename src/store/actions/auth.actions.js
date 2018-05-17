@@ -46,15 +46,7 @@ export const signUpUser = ({ firstname = "", lastname = "", email, password }) =
             const currentUser = firebase.auth().currentUser;
             currentUser.updateProfile({
                 displayName: `${firstname} ${lastname}`
-            })
-
-            // THIS DOES NOT WORK
-            // firebase.database().ref('users/' + user.uid)
-            //     .set({ "firstname": 'AJINKYA', "lastname": 'AJINKYA', "location": "55,44" })
-            //     .then(() => {
-            //         dispatch({ type: SIGN_UP_SUCCESS, payload: user });
-            //         Actions.home();
-            //     });
+            });
         })
         .catch((error) => { dispatch({ type: SIGN_UP_FAILURE, payload: authFailMessage(error.code) }); });
 };

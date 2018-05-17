@@ -1,44 +1,63 @@
-import firebase from 'firebase';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Actions } from 'react-native-router-flux';
-import { Image } from 'react-native';
-import { Container, Header, Content } from 'native-base';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {Container, Content} from 'native-base';
+import {Location, Permissions} from 'expo';
+
 import NavHeader from '../common/NavHeader';
 import ProfileComponent from '../common/Profile.component';
 
-import { setProfileLocation, getProfileLocation, offProfileLocation } from '../../store/actions/profile.actions';
+import {getProfile, offGetProfile, setProfileLocation, uploadImageAsync} from '../../store/actions/profile.actions';
 
 class Profile extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            gpsLocation: null
+        };
     }
 
     componentDidMount() {
-        const {auth} = this.props;
+        const { auth } = this.props;
         if (auth && auth.hasOwnProperty('user')) {
-            this.props.getProfileLocation({uid: auth.user.uid});
+            this.getLocationAsync();
+            this.props.getProfile({ uid: auth.user.uid });
         }
     }
 
     componentWillUnmount() {
-        const {auth} = this.props;
-        this.props.offProfileLocation({uid: auth.user.uid});
+        const { auth } = this.props;
+        this.props.offGetProfile({ uid: auth.user.uid });
     }
 
+    getLocationAsync = async () => {
+        const { auth, setProfileLocation } = this.props;
+        let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        if (status !== 'granted') {
+            this.setState({
+                errorMessage: 'Permission to access location was denied',
+            });
+        }
+
+        let location = await Location.getCurrentPositionAsync({});
+        setProfileLocation({ location, uid: auth.user.uid });
+    };
+
     render() {
-        const {auth, profile, title, setProfileLocation} = this.props;
+        const { auth, profile, title, uploadImageAsync } = this.props;
 
         return (
             <Container>
                 <NavHeader title={title} />
                 <Content>
-                    <ProfileComponent 
+                    <ProfileComponent
+                        isPrivate={true}
+                        uploadImageAsync={uploadImageAsync}
                         thumbnail={auth.user.photoURL || profile.thumbnail}
-                        displayName={auth.user.displayName} location={profile.location} photo={profile.photo} 
-                        uid={auth.user.uid} loading={profile.loading || auth.loading} setProfileLocation={setProfileLocation} lastSeen={auth.user.metadata.b} />
-                    
+                        displayName={auth.user.displayName} location={profile.location} photo={profile.photo}
+                        uid={auth.user.uid} loading={profile.loading || auth.loading} lastSeen={auth.user.metadata.lastSignInTime} />
+
                 </Content>
             </Container>
         );
@@ -54,8 +73,9 @@ function mapDispatchToProps(dispatch) {
     /* code change */
     return bindActionCreators({
         setProfileLocation,
-        getProfileLocation,
-        offProfileLocation
+        getProfile,
+        offGetProfile,
+        uploadImageAsync
     }, dispatch);
 };
 
