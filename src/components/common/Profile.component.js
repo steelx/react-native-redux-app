@@ -21,12 +21,12 @@ export default class ProfileComponent extends Component {
         photo: PropTypes.string.isRequired,
         uid: PropTypes.string.isRequired,
         loading: PropTypes.bool,
-        lastSeen: PropTypes.string.isRequired
-    }
+        lastSeen: PropTypes.string
+    };
 
     render() {
         const { thumbnail, displayName, location, photo, uid,
-            loading, setProfileLocation, lastSeen, isPrivate, uploadImageAsync } = this.props;
+            loading, lastSeen, isPrivate, uploadImageAsync } = this.props;
 
         return (
             <Card>
@@ -35,7 +35,7 @@ export default class ProfileComponent extends Component {
                         <Thumbnail source={{ uri: thumbnail }} />
                         <Body>
                             <Text>{displayName}</Text>
-                            <Text note>{loading ? 'Receiving location...' : ''}{location.latitude} / {location.longitude}</Text>
+                            <Text note>{loading ? 'Receiving location...' : `${location.latitude} :: ${location.longitude}` }</Text>
                         </Body>
                     </Left>
                 </CardItem>
@@ -48,11 +48,13 @@ export default class ProfileComponent extends Component {
                         <ImageUpload firebase={firebase} uid={uid} uploadImageAsync={uploadImageAsync} loading={loading} />
                     </CardItem> : null
                 }
-                <CardItem>
-                    <Right>
-                        <Text note>last seen: {getDateFromMs(lastSeen)}</Text>
-                    </Right>
-                </CardItem>
+                {lastSeen ?
+                    <CardItem>
+                        <Right>
+                            <Text note>last seen: {getDateFromMs(lastSeen)}</Text>
+                        </Right>
+                    </CardItem> : null
+                }
             </Card>
         );
     }

@@ -1,8 +1,7 @@
 import firebase from 'firebase';
-import { Actions } from 'react-native-router-flux';
-import { PERMISSION_DENIED } from './auth.actions';
 import {KITTEN_BIG, KITTEN_SMALL} from "../../utils/constants";
 import uuid from "uuid";
+import {Location, Permissions} from 'expo';
 
 export const SET_PROFILE_LOCATION_INIT = "SET_PROFILE_LOCATION_INIT";
 export const SET_PROFILE_LOCATION_ERROR = "SET_PROFILE_LOCATION_ERROR";
@@ -19,21 +18,29 @@ export const GET_PROFILE_SUCCESS = "GET_PROFILE_SUCCESS";
 
 export const PROFILE_INITIAL_STATE = "PROFILE_INITIAL_STATE";
 
-export const setProfileLocation = ({ location, uid }) => (dispatch) => {
-    dispatch({ type: SET_PROFILE_LOCATION_INIT });
+export const setProfileLocation = ({uid}) => async (dispatch) => {
+    dispatch({type: SET_PROFILE_LOCATION_INIT});
 
-    firebase.database().ref('locations/' + uid)
-        .update({ location })
-        .then(() => {
-            dispatch({ type: SET_PROFILE_LOCATION_SUCCESS, payload: { location } });
-        })
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    let errorMessage = null;
+    if (status !== 'granted') {
+        errorMessage = 'Permission to access location was denied';
+        dispatch({type: SET_PROFILE_LOCATION_ERROR, payload: errorMessage});
+        return;
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    dispatch({type: SET_PROFILE_LOCATION_SUCCESS, payload: {location: location.coords}});
+
+    // update location on server in background
+    firebase.database().ref('locations/' + uid) .update(location.coords)
         .catch((error) => {
-            dispatch({ type: SET_PROFILE_LOCATION_ERROR, payload: error.code });
+            dispatch({type: SET_PROFILE_LOCATION_ERROR, payload: error.code});
         });
 };
 
 export const uploadImageAsync = (uri, uid, firebase) => async (dispatch) => {
-    dispatch({ type: SET_PROFILE_IMAGE_INIT });
+    dispatch({type: SET_PROFILE_IMAGE_INIT});
 
     try {
         const response = await fetch(uri);
@@ -44,37 +51,51 @@ export const uploadImageAsync = (uri, uid, firebase) => async (dispatch) => {
             .child(`users/${uid}/${uuid.v4()}`);
 
         const snapshot = await ref.put(blob);
-        dispatch({ type: SET_PROFILE_IMAGE_SUCCESS });
+        dispatch({type: SET_PROFILE_IMAGE_SUCCESS});
     } catch (e) {
-        dispatch({ type: SET_PROFILE_IMAGE_ERROR, payload: SET_PROFILE_IMAGE_ERROR });
+        dispatch({type: SET_PROFILE_IMAGE_ERROR, payload: SET_PROFILE_IMAGE_ERROR});
     }
 };
 
 
+export const getProfile = ({uid}) => (dispatch) => {
+    dispatch({type: GET_PROFILE_INIT});
+    let usersRef = firebase.database().ref('users/' + uid);
+    let locationsRef = firebase.database().ref('locations/' + uid);
 
-export const getProfile = ({ uid }) => (dispatch) => {
-    dispatch({ type: GET_PROFILE_INIT });
-    let usersDb = firebase.database().ref('users/' + uid);
-
-    usersDb.on('value', (snapshot) => {
+    usersRef.on('value', async (snapshot) => {
         const user = snapshot.val();
         const {displayName, email, metadata, photo, thumbnail, uid} = user;
-        let foundLocation = user.location !== undefined && user.location.coords !== undefined ? {
-            latitude: user.location.coords.latitude, longitude: user.location.coords.longitude } : {};
 
-        dispatch({ type: GET_PROFILE_SUCCESS, payload: {
-            displayName, email, location: foundLocation, metadata, photo: photo || KITTEN_BIG, thumbnail: thumbnail || KITTEN_SMALL, uid} });
+        try {
+            const locationSnap = await locationsRef.once('value');
+            let parsedLocation = locationSnap.toJSON();
+            let location = parsedLocation && parsedLocation.latitude !== undefined && parsedLocation.longitude !== undefined ?
+                {latitude: parsedLocation.latitude, longitude: parsedLocation.longitude} : {};
+
+            dispatch({
+                type: GET_PROFILE_SUCCESS,
+                payload: {
+                    displayName, email, location, metadata, uid,
+                    photo: photo || KITTEN_BIG,
+                    thumbnail: thumbnail || user.photoUrl || KITTEN_SMALL
+                }
+            });
+
+        } catch (error) {
+            dispatch({ type: GET_PROFILE_ERROR , payload: error.code !== undefined ? error.code : error });
+        }
     });
 };
 
 
-export const offGetProfile = ({ uid }) => (dispatch) => {
-    dispatch({ type: OFF_GET_PROFILE });
+export const offGetProfile = ({uid}) => (dispatch) => {
+    dispatch({type: OFF_GET_PROFILE});
     firebase.database().ref('users/' + uid).off();
 };
 
 export const clearProfile = () => (dispatch) => {
-    dispatch({ type: PROFILE_INITIAL_STATE });
+    dispatch({type: PROFILE_INITIAL_STATE});
 };
 
 

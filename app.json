@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "finger",
-    "description": "This project is really great.",
+    "description": "Find and make friends near you.",
     "slug": "finger",
     "privacy": "public",
     "sdkVersion": "27.0.0",
@@ -22,6 +22,14 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.ajinkyaxjs.finger",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCp-BUoX8B8699rkbnb2P2CK4gXSeesVcc"
+        }
+      }
     }
   }
 }

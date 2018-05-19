@@ -1,19 +1,9 @@
 // import firebase from 'firebase';
 import React from 'react';
-import {
-    ActivityIndicator,
-    Button,
-    Clipboard,
-    Image,
-    Share,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from 'react-native';
-import {Constants, ImagePicker} from 'expo';
+import {ActivityIndicator, Clipboard, Share, StatusBar, StyleSheet, View,} from 'react-native';
+import {ImagePicker} from 'expo';
 import uuid from 'uuid';
+import {Button, Text} from "native-base";
 
 export default class ImageUpload extends React.Component {
     state = {
@@ -24,10 +14,9 @@ export default class ImageUpload extends React.Component {
     render() {
         return (
             <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                <Button
-                    onPress={this._pickImage} disabled={this.props.loading}
-                    title="Pick an image"
-                />
+                <Button onPress={this._pickImage} disabled={this.props.loading} transparent>
+                    <Text>Upload an image</Text>
+                </Button>
 
                 {/* <Button onPress={this._takePhoto} title="Take a photo" /> */}
 
@@ -107,10 +96,8 @@ export default class ImageUpload extends React.Component {
 }
 
 async function uploadImageAsync(uri, uid, firebase) {
-    console.log("uploadImageAsync uri", uri);
     const response = await fetch(uri);
     const blob = await response.blob();
-    console.log("blob", blob);
     const ref = firebase
         .storage()
         .ref()

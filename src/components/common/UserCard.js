@@ -7,7 +7,6 @@ import { Ionicons } from '@expo/vector-icons';
 export default class UserCard extends Component {
     render() {
         const { thumbnail, displayName, location, photo, uid, lastSeen } = this.props;
-
         return (
             <Card>
                 <CardItem>

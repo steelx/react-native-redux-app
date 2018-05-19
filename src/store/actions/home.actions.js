@@ -21,69 +21,68 @@ export const USERS_INITIAL_STATE = 'USERS_INITIAL_STATE';
 | Actions
 |--------------------------------------------------
 */
-export function setTitle(title) {
-    return {
-        type: SET_TITLE,
-        value: title
-    }
-}
 
-export const getUsers = () => (dispatch) => {
+export const getUsers = () => async (dispatch) => {
     dispatch({ type: GET_USERS_INIT });
 
-    let ref = firebase.database().ref('users').orderByKey().limitToFirst(2);
+    let usersRef = firebase.database().ref('users').orderByKey().limitToFirst(2);
 
-    ref.once('value')
-        .then((snaps) => {
-            let snapshots = getSnapshots(snaps);
-            dispatch({ type: GET_USERS_SUCCESS, payload: snapshots });
-        })
-        .catch((error) => {
-            dispatch({
-                type: GET_USERS_ERROR,
-                payload: error.code
-            });
+    try {
+        const usersSnap = await usersRef.once('value');
+        let users = await getSnapshots(usersSnap.val());
+        dispatch({ type: GET_USERS_SUCCESS, payload: users });
+    } catch (error) {
+        dispatch({
+            type: GET_USERS_ERROR,
+            payload: error.code
         });
+    }
 };
 
 
-export const loadUsers = (lastUserUid) => (dispatch) => {
+export const loadUsers = (lastUserUid) => async (dispatch) => {
     dispatch({ type: NEXT_USERS_INIT });
 
     let ref = firebase.database().ref('users').orderByKey()
         .startAt(lastUserUid).limitToFirst(10);
 
-    ref.once('value')
-        .then((snaps) => {
-            let snapshots = getSnapshots(snaps);
-            dispatch({ type: NEXT_USERS_SUCCESS, payload: snapshots.slice(1) });
-        })
-        .catch((error) => {
-            dispatch({
-                type: NEXT_USERS_ERROR,
-                payload: error.code
-            });
+    try {
+        const usersSnap = await ref.once('value');
+        let users = await getSnapshots(usersSnap.val());
+        dispatch({ type: NEXT_USERS_SUCCESS, payload: users.slice(1) });
+
+    } catch (error) {
+        dispatch({
+            type: NEXT_USERS_ERROR,
+            payload: error.code
         });
+    }
 };
 
-function getSnapshots(snaps) {
+async function getSnapshots(snaps) {
     let snapshots = [];
-    snaps.forEach(function (childSnapshot) {
 
-        let obj = JSON.stringify(childSnapshot), parsed = JSON.parse(obj);
-        let foundLocation = parsed.location !== undefined && parsed.location.coords !== undefined ? 
-            { latitude: parsed.location.coords.latitude, longitude: parsed.location.coords.longitude } : {};
+    for (let key in snaps) {
+        // const user = JSON.stringify(childSnapshot);
+        const parsed = snaps[key];
+        const locationsRef = firebase.database().ref('locations/' + parsed.uid);
 
-        let item = Object.assign({}, {
-            thumbnail: parsed.thumbnail || KITTEN_SMALL,
+        let locationSnap = await locationsRef.once('value');
+        let parsedLocation = locationSnap.toJSON();
+        const location = parsedLocation && parsedLocation.latitude !== undefined && parsedLocation.longitude !== undefined ?
+            {latitude: parsedLocation.latitude, longitude: parsedLocation.longitude} : {};
+        let updatedUser = Object.assign({}, {
+            thumbnail: parsed.thumbnail || parsed.photoUrl || KITTEN_SMALL,
             photo: parsed.photo || KITTEN_BIG,
             displayName: parsed.displayName,
-            location: foundLocation,
+            location,
             uid: parsed.uid,
             lastSeen: parsed.metadata.lastSignInTime
         });
-        snapshots.push(item);
-    });
+
+        snapshots.push(updatedUser);
+    }
+
     return snapshots;
 }
 

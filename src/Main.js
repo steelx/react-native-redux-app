@@ -42,12 +42,12 @@ class Main extends Component {
                     }
 
                     <Item>
-                        <Button onPress={() => loadUsers(lastUser.uid)}>
+                        <Button onPress={() => loadUsers(lastUser.uid)} disabled={home.loading}>
                             <Text>Load users</Text>
                         </Button>
                     </Item>
                 </Content>
-                <FooterBottom/>
+                <FooterBottom disabled={home.loading} />
             </Container>
         );
     }
