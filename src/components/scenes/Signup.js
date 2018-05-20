@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Actions } from 'react-native-router-flux';
 import { Container, Content, Button, Text, Form, Item, Label, Input, Icon } from 'native-base';
-import styles from './styles';
 import NavHeader from '../common/NavHeader';
 
 import { signUpUser, clearState } from '../../store/actions/auth.actions';
@@ -63,7 +61,7 @@ class Signup extends Component {
     } = this.state;
 
     return (
-      <Container style={styles.container}>
+      <Container>
         <NavHeader title="Sign in" hideIcons={true} />
         <Content>
           <Form>

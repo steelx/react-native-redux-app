@@ -30,13 +30,14 @@ const styles = StyleSheet.create({
     },
     title: {
         flex: 3,
-        paddingHorizontal: 5,
-        alignItems: 'center'
+        paddingHorizontal: 5
     },
     titleText: {
         fontSize: 18,
         color: '#333',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        width: '100%',
+        textAlign: 'center'
     }
 });
 

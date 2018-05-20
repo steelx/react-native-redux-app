@@ -30,9 +30,9 @@ const reducer = (state = INITIAL_STATE, action) => {
       return { ...state, ...INITIAL_STATE, error: action.payload };
 
     case FB_LOGIN_INIT:
-      return { ...state, ...INITIAL_STATE, loading: true };
+      return { ...state, loading: true };
     case FB_LOGIN_FAIL:
-      return { ...state, ...INITIAL_STATE, error: action.payload };
+      return { ...state, loading: false, error: action.payload };
 
     case SET_INITIAL_STATE:
       return { ...state, ...INITIAL_STATE };

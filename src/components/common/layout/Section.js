@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import {View} from "react-native";
 
-export default class Content extends Component {
+export default class Section extends Component {
 
     render() {
         return (

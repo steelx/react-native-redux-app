@@ -35,7 +35,7 @@ class Profile extends Component {
 
     logout() {
         firebase.auth().signOut();
-        Actions.signin();
+        Actions.auth();
     }
 
     render() {
