@@ -16,20 +16,37 @@ export const NEXT_USERS_ERROR = 'NEXT_USERS_ERROR';
 export const USERS_INITIAL_STATE = 'USERS_INITIAL_STATE';
 
 
+const rad = function(x) {
+    return x * Math.PI / 180;
+};
+
+const getDistance = function(p1, p2) {
+    let R = 6378137; // Earth’s mean radius in meter
+    let dLat = rad(p2.latitude - p1.latitude);
+    let dLong = rad(p2.longitude - p1.longitude);
+    let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(rad(p1.latitude)) * Math.cos(rad(p2.latitude)) *
+        Math.sin(dLong / 2) * Math.sin(dLong / 2);
+    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    let d = R * c;
+    return d; // returns the distance in meter
+};
+
 /**
 |--------------------------------------------------
 | Actions
 |--------------------------------------------------
 */
 
-export const getUsers = () => async (dispatch) => {
+export const getUsers = () => async (dispatch, getState) => {
+    const currentProfile = getState().profile;
+    console.log("INIT getState profile: ", currentProfile);
     dispatch({ type: GET_USERS_INIT });
-
     let usersRef = firebase.database().ref('users').orderByKey().limitToFirst(2);
 
     try {
         const usersSnap = await usersRef.once('value');
-        let users = await getSnapshots(usersSnap.val());
+        let users = await getSnapshots(usersSnap.val(), currentProfile);
         dispatch({ type: GET_USERS_SUCCESS, payload: users });
     } catch (error) {
         dispatch({
@@ -40,15 +57,16 @@ export const getUsers = () => async (dispatch) => {
 };
 
 
-export const loadUsers = (lastUserUid) => async (dispatch) => {
+export const loadUsers = (lastUserUid) => async (dispatch, getState) => {
+    const currentProfile = getState().profile;
+    console.log("getState profile: ", currentProfile);
     dispatch({ type: NEXT_USERS_INIT });
-
     let ref = firebase.database().ref('users').orderByKey()
         .startAt(lastUserUid).limitToFirst(10);
 
     try {
         const usersSnap = await ref.once('value');
-        let users = await getSnapshots(usersSnap.val());
+        let users = await getSnapshots(usersSnap.val(), currentProfile);
         dispatch({ type: NEXT_USERS_SUCCESS, payload: users.slice(1) });
 
     } catch (error) {
@@ -59,11 +77,10 @@ export const loadUsers = (lastUserUid) => async (dispatch) => {
     }
 };
 
-async function getSnapshots(snaps) {
+async function getSnapshots(snaps, currentProfile) {
     let snapshots = [];
 
     for (let key in snaps) {
-        // const user = JSON.stringify(childSnapshot);
         const parsed = snaps[key];
         const locationsRef = firebase.database().ref('locations/' + parsed.uid);
 
@@ -80,7 +97,12 @@ async function getSnapshots(snaps) {
             lastSeen: parsed.metadata.lastSignInTime
         });
 
-        snapshots.push(updatedUser);
+        const distance = getDistance(currentProfile.location, location);
+        if (distance / 1000 <= 50) {
+            // less than 50 KM
+            snapshots.push(updatedUser);
+        }
+
     }
 
     return snapshots;
@@ -89,5 +111,3 @@ async function getSnapshots(snaps) {
 export const clearUsers = () => (dispatch) => {
     dispatch({ type: USERS_INITIAL_STATE });
 };
-
-

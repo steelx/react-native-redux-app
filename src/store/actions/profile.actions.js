@@ -18,7 +18,7 @@ export const GET_PROFILE_SUCCESS = "GET_PROFILE_SUCCESS";
 
 export const PROFILE_INITIAL_STATE = "PROFILE_INITIAL_STATE";
 
-export const setProfileLocation = ({uid}) => async (dispatch) => {
+export const setProfileLocation = ({uid}, callback) => async (dispatch) => {
     dispatch({type: SET_PROFILE_LOCATION_INIT});
 
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -28,15 +28,20 @@ export const setProfileLocation = ({uid}) => async (dispatch) => {
         dispatch({type: SET_PROFILE_LOCATION_ERROR, payload: errorMessage});
         return;
     }
-
-    let location = await Location.getCurrentPositionAsync({});
+    let tempOptions = {enableHighAccuracy: false, maximumAge: 0};
+    let location = await Location.getCurrentPositionAsync(tempOptions);
     dispatch({type: SET_PROFILE_LOCATION_SUCCESS, payload: {location: location.coords}});
-
+    if (callback) {
+        console.log("location.coords: ", location.coords);
+        callback();
+    }
     // update location on server in background
-    firebase.database().ref('locations/' + uid) .update(location.coords)
+    firebase.database().ref('locations/' + uid)
+        .update(location.coords)
         .catch((error) => {
             dispatch({type: SET_PROFILE_LOCATION_ERROR, payload: error.code});
         });
+    return location;
 };
 
 export const uploadImageAsync = (uri, uid, firebase) => async (dispatch) => {
