@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Button, Container, Content, Form, Item, Text} from 'native-base';
+import {Container, Content, Form, Item} from 'native-base';
 import styles from './styles';
 import NavHeader from '../common/NavHeader';
 
 import {clearState, facebookLogin, signInUser} from '../../store/actions/auth.actions';
 import {clearProfile} from '../../store/actions/profile.actions';
 import {clearUsers} from '../../store/actions/home.actions';
+import Button from "../common/layout/Button";
 
 class Signin extends Component {
     constructor(props) {
@@ -29,9 +30,9 @@ class Signin extends Component {
                 <Content>
                     <Form>
                         <Item style={{ borderBottomColor: 'transparent' }}>
-                            <Button onPress={() => this.props.facebookLogin()} disabled={auth.loading}>
-                                <Text>Login with Facebook</Text>
-                            </Button>
+                            <Button onPress={() => this.props.facebookLogin()}
+                                    label="Login with Facebook"
+                                    disabled={auth.loading} />
                         </Item>
                     </Form>
                 </Content>

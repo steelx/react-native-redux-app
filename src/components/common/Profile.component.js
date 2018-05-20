@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import {Image} from 'react-native';
 import {Body, Card, CardItem, Item, Left, Right, Text, Thumbnail} from 'native-base';
 import ImageUpload from './ImageUpload';
+import HeartIcon from "./icons/HeartIcon";
 
 const getDateFromMs = (ms) => {
     let dd = new Date(ms);
@@ -50,8 +51,11 @@ export default class ProfileComponent extends Component {
                 }
                 {lastSeen ?
                     <CardItem>
-                        <Right>
+                        <Left>
                             <Text note>last seen: {getDateFromMs(lastSeen)}</Text>
+                        </Left>
+                        <Right>
+                            <HeartIcon />
                         </Right>
                     </CardItem> : null
                 }

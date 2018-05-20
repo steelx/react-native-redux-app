@@ -1,9 +1,7 @@
-// import firebase from 'firebase';
 import React from 'react';
-import {ActivityIndicator, Clipboard, Share, StatusBar, StyleSheet, View,} from 'react-native';
+import {ActivityIndicator, StatusBar, StyleSheet, View,} from 'react-native';
 import {ImagePicker} from 'expo';
-import uuid from 'uuid';
-import {Button, Text} from "native-base";
+import Button from '../common/layout/Button';
 
 export default class ImageUpload extends React.Component {
     state = {
@@ -14,11 +12,7 @@ export default class ImageUpload extends React.Component {
     render() {
         return (
             <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                <Button onPress={this._pickImage} disabled={this.props.loading} transparent>
-                    <Text>Upload an image</Text>
-                </Button>
-
-                {/* <Button onPress={this._takePhoto} title="Take a photo" /> */}
+                <Button raised label="Upload an image" onPress={this._pickImage} disabled={this.props.loading} />
 
                 {this._maybeRenderUploadingOverlay()}
 
@@ -47,27 +41,6 @@ export default class ImageUpload extends React.Component {
         }
     };
 
-    _share = () => {
-        Share.share({
-            message: this.state.image,
-            title: 'Check out this photo',
-            url: this.state.image,
-        });
-    };
-
-    _copyToClipboard = () => {
-        Clipboard.setString(this.state.image);
-        alert('Copied image URL to clipboard');
-    };
-
-    _takePhoto = async () => {
-        let pickerResult = await ImagePicker.launchCameraAsync({
-            allowsEditing: true,
-            aspect: [4, 3],
-        });
-
-        this._handleImagePicked(pickerResult);
-    };
 
     _pickImage = async () => {
         let pickerResult = await ImagePicker.launchImageLibraryAsync({
@@ -93,16 +66,4 @@ export default class ImageUpload extends React.Component {
             this.setState({uploading: false});
         }
     };
-}
-
-async function uploadImageAsync(uri, uid, firebase) {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    const ref = firebase
-        .storage()
-        .ref()
-        .child(`users/${uid}/${uuid.v4()}`);
-    // console.log("ref", ref);
-    const snapshot = await ref.put(blob);
-    return snapshot.downloadURL;
 }

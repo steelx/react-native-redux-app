@@ -12,7 +12,6 @@ class OtherProfile extends Component {
 
     render() {
         const {thumbnail, displayName, location, photo, uid, lastSeen} = this.props;
-        console.log("other profile location => ", location);
         return (
             <Container>
                 <NavHeader hideLeft title={displayName} />

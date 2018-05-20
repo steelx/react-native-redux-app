@@ -3,6 +3,8 @@ node_modules/**/*
 npm-debug.*
 .idea
 .idea/*
+finger.jks
+notes.txt
 .vscode
 .DS_Store
 firebase.config.js

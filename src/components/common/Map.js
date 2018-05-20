@@ -6,14 +6,16 @@ import Layout from "../../utils/Layout";
 
 export default class Map extends React.Component {
     static propTypes = {
-        latitude: PropTypes.number.isRequired,
-        longitude: PropTypes.number.isRequired,
+        latitude: PropTypes.number,
+        longitude: PropTypes.number,
         name: PropTypes.string.isRequired
     };
 
     render() {
         const {latitude, longitude, name} = this.props;
-
+        if(latitude === undefined || longitude === undefined) {
+            return null;
+        }
         return (
             <View style={[styles.card, styles.mapContainer]}>
                 <MapView

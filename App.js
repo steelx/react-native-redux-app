@@ -26,8 +26,8 @@ export default class App extends React.Component {
         firebase.initializeApp(config);
         firebase.auth().onAuthStateChanged((user) => {
             if (user !== null) {
-                store.dispatch({type: SIGN_IN_SUCCESS, payload: user});
                 setProfileLocation({uid: user.uid})(store.dispatch);
+                store.dispatch({type: SIGN_IN_SUCCESS, payload: user});
             }
         });
     }

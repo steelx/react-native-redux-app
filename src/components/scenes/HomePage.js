@@ -2,18 +2,14 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Actions} from 'react-native-router-flux';
-import {
-    Container, Content, Button, Text, Item
-} from 'native-base';
+import {Button, Container, Content, Item, Text} from 'native-base';
+import UserCard from '../common/UserCard';
 
-import NavHeader from './components/common/NavHeader';
-import FooterBottom from './components/common/FooterBottom';
-import UserCard from './components/common/UserCard';
+import {getUsers, loadUsers} from '../../store/actions/home.actions';
+import Header from "../common/layout/Header";
+import Footer from "../common/layout/Footer";
 
-import {getUsers, loadUsers} from './store/actions/home.actions';
-
-class Main extends Component {
+class HomePage extends Component {
     static propTypes = {
         routes: PropTypes.object,
     };
@@ -28,11 +24,11 @@ class Main extends Component {
     }
 
     render() {
-        const {loadUsers, home} = this.props;
+        const {loadUsers, home, profile} = this.props;
         let lastUser = home.users[home.users.length - 1];
         return (
             <Container>
-                <NavHeader title={this.props.title} onRightPress={() => Actions.profile()}/>
+                <Header title='Fingerrr' />
 
                 <Content>
                     {
@@ -42,19 +38,20 @@ class Main extends Component {
                     }
 
                     <Item>
-                        <Button onPress={() => loadUsers(lastUser.uid)} disabled={home.loading}>
+                        <Button onPress={() => loadUsers(lastUser.uid, profile)} disabled={home.loading}>
                             <Text>Load users</Text>
                         </Button>
                     </Item>
                 </Content>
-                <FooterBottom disabled={home.loading} />
+
+                <Footer />
             </Container>
         );
     }
 }
 
-function mapStateToProps({home}) {
-    return {home}
+function mapStateToProps({home, profile}) {
+    return {home, profile};
 }
 
 // Maps `dispatch` to `props`:
@@ -62,6 +59,6 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         getUsers, loadUsers
     }, dispatch);
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

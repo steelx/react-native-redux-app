@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import React from 'react';
-import Main from './Main';
+import HomePage from './components/scenes/HomePage';
 import Signup from './components/scenes/Signup';
 import Signin from './components/scenes/Signin';
 import Profile from './components/scenes/Profile';
@@ -22,7 +22,7 @@ const Routes = () => (
                     <Scene key="signup" hideNavBar component={requireAuthNOT(Signup)} title="Register" />
                 </Stack>
                 <Stack key="main">
-                    <Scene hideNavBar key="home" component={requireAuth(Main)} title="Home" />
+                    <Scene hideNavBar key="home" component={requireAuth(HomePage)} title="Home" />
                     <Scene hideNavBar key="profile" component={requireAuth(Profile)} title="Profile" />
                     <Scene hideNavBar key="otherprofile" component={requireAuth(OtherProfile)} />
                 </Stack>

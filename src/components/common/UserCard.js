@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Image, TouchableHighlight } from 'react-native';
-import { Card, CardItem, Thumbnail, Text, Button, Left, Body, Right } from 'native-base';
+import { Card, CardItem, Text, Left, Body, Right } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import { Ionicons } from '@expo/vector-icons';
+import HeartIcon from "./icons/HeartIcon";
 
 export default class UserCard extends Component {
     render() {
@@ -23,12 +23,12 @@ export default class UserCard extends Component {
                     </CardItem>
                 </TouchableHighlight>
                 <CardItem footer>
-                    <Body>
-                        <Button transparent warning>
-                            <Ionicons name='md-heart' size={32} color="red" style={{marginLeft: 10}} />
-                            <Text>Like</Text>
-                        </Button>
-                    </Body>
+                    <Left>
+                        <Text>&nbsp;</Text>
+                    </Left>
+                    <Right>
+                        <HeartIcon />
+                    </Right>
                 </CardItem>
             </Card>
         );

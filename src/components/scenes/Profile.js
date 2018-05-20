@@ -1,14 +1,16 @@
+import firebase from "firebase";
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Container, Content} from 'native-base';
-import {Location, Permissions} from 'expo';
-
-import NavHeader from '../common/NavHeader';
-import ProfileComponent from '../common/Profile.component';
+import {Actions} from "react-native-router-flux";
 
 import {getProfile, offGetProfile, setProfileLocation, uploadImageAsync} from '../../store/actions/profile.actions';
 import Map from "../common/Map";
+import {View} from "react-native";
+import ProfileComponent from '../common/Profile.component';
+import LogoutIcon from "../common/icons/LogoutIcon";
+import Header from "../common/layout/Header";
 
 class Profile extends Component {
     constructor(props) {
@@ -22,7 +24,6 @@ class Profile extends Component {
     componentDidMount() {
         const { auth } = this.props;
         if (auth && auth.hasOwnProperty('user')) {
-            // this.getLocationAsync();
             this.props.getProfile({ uid: auth.user.uid });
         }
     }
@@ -32,17 +33,17 @@ class Profile extends Component {
         this.props.offGetProfile({ uid: auth.user.uid });
     }
 
-    getLocationAsync = () => {
-        const { auth, setProfileLocation } = this.props;
-        setProfileLocation({ location, uid: auth.user.uid });
-    };
+    logout() {
+        firebase.auth().signOut();
+        Actions.signin();
+    }
 
     render() {
-        const { auth, profile, title, uploadImageAsync } = this.props;
+        const { auth, profile, uploadImageAsync, title } = this.props;
 
         return (
             <Container>
-                <NavHeader hideLeft title={title} />
+                <Header title={title} />
                 <Content>
                     <ProfileComponent
                         isPrivate={true}
@@ -52,6 +53,10 @@ class Profile extends Component {
                         uid={auth.user.uid} loading={profile.loading || auth.loading} />
 
                     <Map name={auth.user.displayName} {...profile.location} />
+
+                    <View style={{flex: 1, margin: 20, alignItems: 'center'}}>
+                        <LogoutIcon onPress={() => this.logout()} />
+                    </View>
                 </Content>
             </Container>
         );
