@@ -14,5 +14,8 @@
     "redux": "^4.0.0",
     "redux-thunk": "^2.2.0",
     "uuid": "^3.2.1"
+  },
+  "devDependencies": {
+    "react-native-gifted-chat": "^0.4.3"
   }
 }

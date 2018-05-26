@@ -11,6 +11,8 @@ import store from './store/configureStore';
 import requireAuth from './utils/requireAuth.container';
 import requireAuthNOT from './utils/requireAuthNot.container';
 import OtherProfile from './components/scenes/OtherProfile';
+import MessagesPage from "./components/scenes/MessagesPage";
+import ChatPage from "./components/scenes/ChatPage";
 const RouterWithRedux = connect()(Router);
 
 const Routes = () => (
@@ -25,6 +27,8 @@ const Routes = () => (
                     <Scene hideNavBar key="home" component={requireAuth(HomePage)} title="Home" />
                     <Scene hideNavBar key="profile" component={requireAuth(Profile)} title="Profile" />
                     <Scene hideNavBar key="otherprofile" component={requireAuth(OtherProfile)} />
+                    <Scene hideNavBar key="messages" component={requireAuth(MessagesPage)} />
+                    <Scene hideNavBar key="chat" component={requireAuth(ChatPage)} />
                 </Stack>
             </Stack>
         </RouterWithRedux>

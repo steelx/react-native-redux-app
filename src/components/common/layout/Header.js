@@ -44,19 +44,16 @@ const styles = StyleSheet.create({
 export default class Header extends Component {
 
     render() {
-        // const goBack = () => Actions.pop();
-        const goToProfile = () => Actions.profile();
-
         return (
             <View style={styles.container}>
                 <View style={styles.utilRow}>
-                    <MessagesIcon/>
+                    <MessagesIcon onPress={() => Actions.messages()} />
                 </View>
                 <View style={styles.title}>
                     <Text style={styles.titleText}>{this.props.title}</Text>
                 </View>
                 <View style={styles.rightSide}>
-                    <ProfileIcon onPress={goToProfile} />
+                    <ProfileIcon onPress={() => Actions.profile()} />
                 </View>
             </View>
         );

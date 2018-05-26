@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Button, Container, Content, Item, Spinner, Text} from 'native-base';
+import {Button, Container, Content, Text} from 'native-base';
 import UserCard from '../common/UserCard';
 
 import {getUsers, loadUsers} from '../../store/actions/home.actions';
@@ -21,6 +21,8 @@ class HomePage extends Component {
     }
 
     componentWillMount() {
+        // const chats = firebase.database().ref('chats');
+        // chats.push().set({from: 1, message: 'test 2', to: 2});
         this.props.getUsers();
     }
 
@@ -38,7 +40,7 @@ class HomePage extends Component {
                             : null
                     }
 
-                    <Section style={{borderBottomColor: 'transparent', flex: 1}}>
+                    <Section>
                         {
                             home.loading ? <Loading/> :
                                 <Button onPress={() => loadUsers(lastUser.uid, profile)} disabled={home.loading}
@@ -49,7 +51,7 @@ class HomePage extends Component {
                     </Section>
                 </Content>
 
-                <Footer/>
+                <Footer />
             </Container>
         );
     }

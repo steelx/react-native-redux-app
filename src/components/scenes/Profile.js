@@ -11,6 +11,7 @@ import {View} from "react-native";
 import ProfileComponent from '../common/Profile.component';
 import LogoutIcon from "../common/icons/LogoutIcon";
 import Header from "../common/layout/Header";
+import Footer from "../common/layout/Footer";
 
 class Profile extends Component {
     constructor(props) {
@@ -58,6 +59,7 @@ class Profile extends Component {
                         <LogoutIcon onPress={() => this.logout()} />
                     </View>
                 </Content>
+                <Footer/>
             </Container>
         );
     }

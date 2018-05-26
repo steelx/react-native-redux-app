@@ -32,7 +32,6 @@ export const setProfileLocation = ({uid}, callback) => async (dispatch) => {
     let location = await Location.getCurrentPositionAsync(tempOptions);
     dispatch({type: SET_PROFILE_LOCATION_SUCCESS, payload: {location: location.coords}});
     if (callback) {
-        console.log("location.coords: ", location.coords);
         callback();
     }
     // update location on server in background

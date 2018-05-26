@@ -40,7 +40,6 @@ const getDistance = function(p1, p2) {
 
 export const getUsers = () => async (dispatch, getState) => {
     const currentProfile = getState().profile;
-    console.log("INIT getState profile: ", currentProfile);
     dispatch({ type: GET_USERS_INIT });
     let usersRef = firebase.database().ref('users').orderByKey().limitToFirst(2);
 
@@ -59,7 +58,6 @@ export const getUsers = () => async (dispatch, getState) => {
 
 export const loadUsers = (lastUserUid) => async (dispatch, getState) => {
     const currentProfile = getState().profile;
-    console.log("getState profile: ", currentProfile);
     dispatch({ type: NEXT_USERS_INIT });
     let ref = firebase.database().ref('users').orderByKey()
         .startAt(lastUserUid).limitToFirst(10);

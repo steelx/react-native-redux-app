@@ -28,7 +28,6 @@ export const FB_LOGIN_INIT = 'FB_LOGIN_INIT';
 */
 export const signInUser = ({ email, password }) => (dispatch) => {
     dispatch({ type: SIGN_IN_REQUEST });
-    console.log(email, password);
     firebase.auth().signInWithEmailAndPassword(email, password)
         .then((user) => {
             dispatch({ type: SIGN_IN_SUCCESS, payload: user });
